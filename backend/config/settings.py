@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     
     # @ Third Party Packages
     'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
