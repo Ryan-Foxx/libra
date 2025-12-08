@@ -43,12 +43,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # @ Development Apps
+    'accounts.apps.AccountsConfig',
+    
     # @ Third Party Packages
     'corsheaders',
+    'rest_framework',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +63,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = ['127.0.0.1'] + [ip[:-1] + '1' for ip in ips]
 
 ROOT_URLCONF = 'config.urls'
 
@@ -136,6 +148,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# @ Authentication Settings Config
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # CORS settings for frontend access
 # Environment variable format: "http://localhost:3000,https://mydomain.com,https://www.mydomain.com"
