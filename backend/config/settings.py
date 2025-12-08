@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # @ Development Apps
+    'accounts.apps.AccountsConfig',
+    
     # @ Third Party Packages
     'corsheaders',
 ]
@@ -136,6 +139,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# @ Authentication Settings Config
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # CORS settings for frontend access
 # Environment variable format: "http://localhost:3000,https://mydomain.com,https://www.mydomain.com"
