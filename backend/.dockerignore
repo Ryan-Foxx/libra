@@ -1,0 +1,64 @@
+# IDE / Editor
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.idea/
+.idea
+*.swp
+*.sublime-project
+*.sublime-workspace
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+env/
+.venv/
+venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Django stuff:
+*.sqlite3
+*.log
+*.pot
+*.pyc
+media/
+static/
+staticfiles/
+fixtures.json
+
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env*
+
+# Git
+.git
+.gitignore
+
+# uv
+uv.lock
+pyproject.toml
+
+# Docker config (compose files)
+docker-compose*.yml
+Dockerfile
+.dockerignore
+
+# Temporary files
+*.tmp
+*.swp
+.cache
