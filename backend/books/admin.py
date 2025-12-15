@@ -4,6 +4,7 @@ from .models import (
     Author,
     Book,
     Category,
+    Comment,
     ContentFormat,
     Language,
     Publisher,
@@ -69,4 +70,10 @@ class BookAdmin(admin.ModelAdmin):
         "datetime_created",
         "datetime_modified",
     ]
+    list_per_page = 10
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "book", "body", "datetime_created", "status"]
     list_per_page = 10
