@@ -1,3 +1,5 @@
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from .models import Book, Comment
@@ -20,6 +22,12 @@ class BookViewSet(ReadOnlyModelViewSet):
 class CommentViewSet(ModelViewSet):
     http_method_names = ["get", "post", "head", "options"]
     serializer_class = CommentSerializer
+    authentication_classes = [SessionAuthentication]
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [IsAuthenticated()]
+        return [AllowAny()]
 
     def get_queryset(self):
         book_pk = self.kwargs["book_pk"]
