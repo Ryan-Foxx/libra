@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import dj_database_url
 from environs import Env
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     # @ Third Party Packages
     'corsheaders',
     'rest_framework',
+    'djoser',
     'debug_toolbar',
 ]
 
@@ -152,6 +154,33 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # @ Authentication Settings Config
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# @ REST FRAMEWORK SETTINGS
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+# @ DJOSER SETTINGS
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'accounts.serializers.customuser_serializers.CustomUserCreateSerializer',
+        'user': 'accounts.serializers.customuser_serializers.CustomUserSerializer',
+        'current_user': 'accounts.serializers.customuser_serializers.CustomCurrentUserSerializer',
+    }
+}
+
+# @ SIMPLE JWT SETTINGS
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=env.int('JWT_ACCESS_TOKEN_MINUTES', 60)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=env.int('JWT_REFRESH_TOKEN_DAYS', 1)),
+    'ROTATE_REFRESH_TOKENS': env.bool('JWT_ROTATE_REFRESH_TOKENS', True),
+    'BLACKLIST_AFTER_ROTATION': env.bool('JWT_BLACKLIST_AFTER_ROTATION', True),
+    'AUTH_HEADER_TYPES': env.str('JWT_AUTH_HEADER_TYPE', 'Bearer'),
+    'SIGNING_KEY': env.str('JWT_SIGNING_KEY', SECRET_KEY),
+    'ALGORITHM': env.str('JWT_ALGORITHM', 'HS256'),
+}
 
 # CORS settings for frontend access
 # Environment variable format: "http://localhost:3000,https://mydomain.com,https://www.mydomain.com"
