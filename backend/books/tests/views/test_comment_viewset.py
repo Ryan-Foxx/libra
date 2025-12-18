@@ -50,7 +50,7 @@ class TestCommentViewSet(TestCase):
         url = reverse("book-comments-list", kwargs={"book_pk": self.book.pk})
         response = self.client.post(url, data={"body": "Test comment"})
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Comment.objects.count(), 0)
 
     def test_list_only_returns_approved_comments(self):
