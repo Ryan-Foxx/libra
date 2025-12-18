@@ -1,6 +1,6 @@
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Book, Comment
 from .serializers.book_serializers import BookSerializer
@@ -22,7 +22,7 @@ class BookViewSet(ReadOnlyModelViewSet):
 class CommentViewSet(ModelViewSet):
     http_method_names = ["get", "post", "head", "options"]
     serializer_class = CommentSerializer
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
         if self.request.method == "POST":
