@@ -1,7 +1,7 @@
 import os
 
 from books.models import Book
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -31,3 +31,13 @@ def rename_cover_image(sender, instance, created, **kwargs):
         instance.cover_image.storage.save(new_name, instance.cover_image.file)
         instance.cover_image.name = new_name
         instance.save(update_fields=["cover_image"])
+
+
+@receiver(post_delete, sender=Book)
+def delete_book_cover_after_book_delete(sender, instance, **kwargs):
+    if instance.cover_image:
+        try:
+            if instance.cover_image.path and os.path.exists(instance.cover_image.path):
+                os.remove(instance.cover_image.path)
+        except (ValueError, FileNotFoundError):
+            pass
