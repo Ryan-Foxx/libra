@@ -61,6 +61,7 @@ class BookSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
+            "cover_image",
             "authors",
             "translators",
             "publisher",
