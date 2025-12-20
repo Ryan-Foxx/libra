@@ -1,7 +1,7 @@
 import os
 
 from books.models import BookImage
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -29,3 +29,10 @@ def rename_book_image(sender, instance, created, **kwargs):
         instance.image.storage.save(new_name, instance.image.file)
         instance.image.name = new_name
         instance.save(update_fields=["image"])
+
+
+@receiver(post_delete, sender=BookImage)
+def delete_image_file_after_image_object_delete(sender, instance, **kwargs):
+    if instance.image:
+        if instance.image.path and os.path.exists(instance.image.path):
+            os.remove(instance.image.path)
