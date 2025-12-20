@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     Author,
     Book,
+    BookImage,
     Category,
     Comment,
     ContentFormat,
@@ -71,6 +72,11 @@ class BookAdmin(admin.ModelAdmin):
         "datetime_modified",
     ]
     list_per_page = 10
+
+
+@admin.register(BookImage)
+class BookImageAdmin(admin.ModelAdmin):
+    list_display = ["id", "book", "image", "description"]
 
 
 @admin.register(Comment)
