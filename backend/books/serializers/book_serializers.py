@@ -7,6 +7,7 @@ from books.models import (
     Publisher,
     Translator,
 )
+from books.serializers.book_image_serializers import BookImageSerializer
 from rest_framework import serializers
 
 
@@ -48,6 +49,7 @@ class ContentFormatSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
 
+    images = BookImageSerializer(many=True, read_only=True)
     authors = AuthorSerializer(many=True, read_only=True)
     translators = TranslatorSerializer(many=True, read_only=True)
     publisher = PublisherSerializer(read_only=True)
@@ -62,6 +64,7 @@ class BookSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "cover_image",
+            "images",
             "authors",
             "translators",
             "publisher",

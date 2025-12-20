@@ -12,6 +12,7 @@ router.register("books", views.BookViewSet, basename="book")
 # $ Book Nested Routers
 book_router = routers.NestedDefaultRouter(router, "books", lookup="book")
 book_router.register("comments", views.CommentViewSet, basename="book-comments")
+book_router.register("images", views.BookImageViewSet, basename="book-images")
 
 
 # @ ------------------- Include Routers To URL ↓ -------------------
