@@ -13,10 +13,17 @@ def delete_old_cover(sender, instance, **kwargs):
         old_instance = Book.objects.get(pk=instance.pk)
     except Book.DoesNotExist:
         return
-    if old_instance.cover_image and old_instance.cover_image != instance.cover_image:
-        old_path = old_instance.cover_image.path
-        if os.path.exists(old_path):
-            os.remove(old_path)
+    old_file = old_instance.cover_image
+    new_file = instance.cover_image
+    if not old_file:
+        return
+    if not new_file:
+        if old_file.path and os.path.exists(old_file.path):
+            os.remove(old_file.path)
+        return
+    if old_file.name != new_file.name:
+        if old_file.path and os.path.exists(old_file.path):
+            os.remove(old_file.path)
 
 
 @receiver(post_save, sender=Book)
