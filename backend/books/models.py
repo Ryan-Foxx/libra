@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from .utils.paths import book_cover_upload_path
+
 
 # Create your models here.
 class Author(models.Model):
@@ -55,6 +57,7 @@ class ContentFormat(models.Model):
 class Book(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField()
+    cover_image = models.ImageField(upload_to=book_cover_upload_path, null=True, blank=True)
     authors = models.ManyToManyField(Author, related_name="books")
     translators = models.ManyToManyField(Translator, related_name="books", blank=True)
     publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT, related_name="books")
