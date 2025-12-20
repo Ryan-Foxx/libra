@@ -7,3 +7,4 @@ class BooksConfig(AppConfig):
 
     def ready(self):
         import books.signals.book_cover
+        import books.signals.book_image
