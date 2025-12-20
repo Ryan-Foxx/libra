@@ -1,13 +1,13 @@
 from books.models import (
     Author,
     Book,
-    BookImage,
     Category,
     ContentFormat,
     Language,
     Publisher,
     Translator,
 )
+from books.serializers.book_image_serializers import BookImageSerializer
 from rest_framework import serializers
 
 
@@ -45,12 +45,6 @@ class ContentFormatSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContentFormat
         fields = ["id", "name"]
-
-
-class BookImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookImage
-        fields = ["id", "image", "description"]
 
 
 class BookSerializer(serializers.ModelSerializer):

@@ -2,7 +2,7 @@ import tempfile
 from datetime import date
 
 from books.models import Book, BookImage, Category, Publisher
-from books.serializers.book_serializers import BookImageSerializer
+from books.serializers.book_image_serializers import BookImageSerializer
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 

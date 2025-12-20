@@ -1,9 +1,10 @@
+from books.serializers.book_image_serializers import BookImageSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Book, BookImage, Comment
-from .serializers.book_serializers import BookImageSerializer, BookSerializer
+from .serializers.book_serializers import BookSerializer
 from .serializers.comment_serializers import CommentSerializer
 
 
