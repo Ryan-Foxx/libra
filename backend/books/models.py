@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-from .utils.paths import book_cover_upload_path
+from .utils.paths import book_cover_upload_path, book_image_upload_path
 
 
 # Create your models here.
@@ -75,6 +75,15 @@ class Book(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BookImage(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to=book_image_upload_path, null=True, blank=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"Image for {self.book.name}"
 
 
 class Comment(models.Model):
