@@ -1,6 +1,7 @@
 from books.models import (
     Author,
     Book,
+    BookImage,
     Category,
     ContentFormat,
     Language,
@@ -46,8 +47,15 @@ class ContentFormatSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
 
+class BookImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookImage
+        fields = ["id", "image", "description"]
+
+
 class BookSerializer(serializers.ModelSerializer):
 
+    images = BookImageSerializer(many=True, read_only=True)
     authors = AuthorSerializer(many=True, read_only=True)
     translators = TranslatorSerializer(many=True, read_only=True)
     publisher = PublisherSerializer(read_only=True)
@@ -62,6 +70,7 @@ class BookSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "cover_image",
+            "images",
             "authors",
             "translators",
             "publisher",

@@ -2,8 +2,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .models import Book, Comment
-from .serializers.book_serializers import BookSerializer
+from .models import Book, BookImage, Comment
+from .serializers.book_serializers import BookImageSerializer, BookSerializer
 from .serializers.comment_serializers import CommentSerializer
 
 
@@ -13,10 +13,18 @@ class BookViewSet(ReadOnlyModelViewSet):
 
     queryset = (
         Book.objects.select_related("publisher", "category")
-        .prefetch_related("authors", "translators", "content_formats", "languages")
+        .prefetch_related("images", "authors", "translators", "content_formats", "languages")
         .order_by("-datetime_created")
         .all()
     )
+
+
+class BookImageViewSet(ReadOnlyModelViewSet):
+    serializer_class = BookImageSerializer
+
+    def get_queryset(self):
+        book_pk = self.kwargs["book_pk"]
+        return BookImage.objects.filter(book__id=book_pk).all()
 
 
 class CommentViewSet(ModelViewSet):
