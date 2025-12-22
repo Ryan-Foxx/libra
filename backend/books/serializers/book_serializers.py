@@ -57,6 +57,9 @@ class BookSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True, read_only=True)
     content_formats = ContentFormatSerializer(many=True, read_only=True)
 
+    # @ Custom Method Field
+    is_favorited = serializers.SerializerMethodField()
+
     class Meta:
         model = Book
         fields = [
@@ -79,4 +82,13 @@ class BookSerializer(serializers.ModelSerializer):
             "publication_date",
             "datetime_created",
             "datetime_modified",
+            "is_favorited",
         ]
+
+    def get_is_favorited(self, book: Book):
+        request = self.context.get("request")
+        if not request or not request.user.is_authenticated:
+            return False
+
+        favorite_book_ids = self.context.get("favorite_book_ids", set())
+        return book.id in favorite_book_ids

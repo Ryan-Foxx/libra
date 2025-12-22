@@ -22,6 +22,18 @@ class BookViewSet(ReadOnlyModelViewSet):
         .all()
     )
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        user = self.request.user
+
+        if user.is_authenticated:
+            favorite_book_ids = set(Favorite.objects.filter(user=user).values_list("book_id", flat=True))
+        else:
+            favorite_book_ids = set()
+
+        context["favorite_book_ids"] = favorite_book_ids
+        return context
+
 
 class BookImageViewSet(ReadOnlyModelViewSet):
     serializer_class = BookImageSerializer
