@@ -1,5 +1,6 @@
 from books.serializers.book_image_serializers import BookImageSerializer
 from books.serializers.favorite_serializers import FavoriteSerializer
+from core.pagination.favorites import FavoritePagination
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -72,6 +73,7 @@ class FavoriteViewSet(ModelViewSet):
     serializer_class = FavoriteSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    pagination_class = FavoritePagination
 
     def get_queryset(self):
         user_id = self.request.user.id
