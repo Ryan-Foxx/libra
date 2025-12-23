@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 
 # @ ------------------- Create Routers ↓ -------------------
 router.register("books", views.BookViewSet, basename="book")
+router.register("favorites", views.FavoriteViewSet, basename="favorite")
 
 
 # @ ------------------- Create Nested Routers ↓ -------------------

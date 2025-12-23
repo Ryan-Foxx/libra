@@ -7,6 +7,7 @@ from .models import (
     Category,
     Comment,
     ContentFormat,
+    Favorite,
     Language,
     Publisher,
     Translator,
@@ -82,4 +83,10 @@ class BookImageAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ["id", "user", "book", "body", "datetime_created", "status"]
+    list_per_page = 10
+
+
+@admin.register(Favorite)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "book", "datetime_created"]
     list_per_page = 10

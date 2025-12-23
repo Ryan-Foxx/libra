@@ -1,9 +1,13 @@
 from books.serializers.book_image_serializers import BookImageSerializer
+from books.serializers.favorite_serializers import FavoriteSerializer
+from core.pagination.favorites import FavoritePagination
+from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .models import Book, BookImage, Comment
+from .models import Book, BookImage, Comment, Favorite
 from .serializers.book_serializers import BookSerializer
 from .serializers.comment_serializers import CommentSerializer
 
@@ -18,6 +22,18 @@ class BookViewSet(ReadOnlyModelViewSet):
         .order_by("-datetime_created")
         .all()
     )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        user = self.request.user
+
+        if user.is_authenticated:
+            favorite_book_ids = set(Favorite.objects.filter(user=user).values_list("book_id", flat=True))
+        else:
+            favorite_book_ids = set()
+
+        context["favorite_book_ids"] = favorite_book_ids
+        return context
 
 
 class BookImageViewSet(ReadOnlyModelViewSet):
@@ -50,3 +66,29 @@ class CommentViewSet(ModelViewSet):
     def perform_create(self, serializer):
         book_pk = self.kwargs["book_pk"]
         serializer.save(user=self.request.user, book_id=book_pk)
+
+
+class FavoriteViewSet(ModelViewSet):
+    http_method_names = ["get", "post", "head", "options"]
+    serializer_class = FavoriteSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    pagination_class = FavoritePagination
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Favorite.objects.filter(user__id=user_id).order_by("-datetime_created").all()
+
+    def create(self, request):
+        book_id = request.data.get("book")
+        favorite = Favorite.objects.filter(user=request.user, book_id=book_id).first()
+
+        if favorite:
+            favorite.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=request.user)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

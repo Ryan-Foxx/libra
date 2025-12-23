@@ -100,3 +100,15 @@ class Comment(models.Model):
     body = models.TextField()
     datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=COMMENT_STATUS, default=COMMENT_STATUS_WAITING)
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favorites")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="favorites")
+    datetime_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "book"], name="unique_books_favorite_user_book")]
+
+    def __str__(self):
+        return f"{self.user} - {self.book}"
