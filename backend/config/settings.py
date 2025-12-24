@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     
     # @ Third Party Packages
     'corsheaders',
+    'django_filters',
     'rest_framework',
     'djoser',
     'debug_toolbar',
