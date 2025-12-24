@@ -1,6 +1,8 @@
+from books.filters.book_filters import BookFilter
 from books.serializers.book_image_serializers import BookImageSerializer
 from books.serializers.favorite_serializers import FavoriteSerializer
 from core.pagination.favorites import FavoritePagination
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -15,12 +17,15 @@ from .serializers.comment_serializers import CommentSerializer
 # Create your views here.
 class BookViewSet(ReadOnlyModelViewSet):
     serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BookFilter
 
     queryset = (
         Book.objects.select_related("publisher", "category")
         .prefetch_related("images", "authors", "translators", "content_formats", "languages")
         .order_by("-datetime_created")
         .all()
+        .distinct()
     )
 
     def get_serializer_context(self):
