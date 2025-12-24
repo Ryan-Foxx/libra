@@ -1,6 +1,7 @@
 from books.filters.book_filters import BookFilter
 from books.serializers.book_image_serializers import BookImageSerializer
 from books.serializers.favorite_serializers import FavoriteSerializer
+from core.pagination.books import BookPagination
 from core.pagination.favorites import FavoritePagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -21,6 +22,7 @@ class BookViewSet(ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = BookFilter
     ordering_fields = ["price", "datetime_created", "datetime_modified"]
+    pagination_class = BookPagination
 
     queryset = (
         Book.objects.select_related("publisher", "category")
