@@ -4,6 +4,7 @@ from books.serializers.favorite_serializers import FavoriteSerializer
 from core.pagination.favorites import FavoritePagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -17,8 +18,9 @@ from .serializers.comment_serializers import CommentSerializer
 # Create your views here.
 class BookViewSet(ReadOnlyModelViewSet):
     serializer_class = BookSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = BookFilter
+    ordering_fields = ["price", "datetime_created", "datetime_modified"]
 
     queryset = (
         Book.objects.select_related("publisher", "category")
