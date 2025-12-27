@@ -4,6 +4,7 @@ from books.serializers.favorite_serializers import FavoriteSerializer
 from books.serializers.rating_serializers import RatingSerializer
 from core.pagination.books import BookPagination
 from core.pagination.favorites import FavoritePagination
+from django.db.models import Avg, Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
@@ -28,6 +29,10 @@ class BookViewSet(ReadOnlyModelViewSet):
     queryset = (
         Book.objects.select_related("publisher", "category")
         .prefetch_related("images", "authors", "translators", "content_formats", "languages")
+        .annotate(
+            avg_rating=Avg("ratings__score"),
+            rating_count=Count("ratings__id"),
+        )
         .order_by("-datetime_created")
         .all()
         .distinct()
