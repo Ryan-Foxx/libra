@@ -4,7 +4,7 @@ from books.serializers.favorite_serializers import FavoriteSerializer
 from books.serializers.rating_serializers import RatingSerializer
 from core.pagination.books import BookPagination
 from core.pagination.favorites import FavoritePagination
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, IntegerField, OuterRef, Subquery, Value
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
@@ -26,17 +26,35 @@ class BookViewSet(ReadOnlyModelViewSet):
     ordering_fields = ["price", "datetime_created", "datetime_modified"]
     pagination_class = BookPagination
 
-    queryset = (
-        Book.objects.select_related("publisher", "category")
-        .prefetch_related("images", "authors", "translators", "content_formats", "languages")
-        .annotate(
-            avg_rating=Avg("ratings__score"),
-            rating_count=Count("ratings__id"),
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = (
+            Book.objects.select_related("publisher", "category")
+            .prefetch_related("images", "authors", "translators", "content_formats", "languages")
+            .annotate(
+                avg_rating=Avg("ratings__score"),
+                rating_count=Count("ratings__id"),
+            )
+            .order_by("-datetime_created")
+            .distinct()
+            .all()
         )
-        .order_by("-datetime_created")
-        .all()
-        .distinct()
-    )
+
+        if user.is_authenticated:
+            queryset = queryset.annotate(
+                my_rating=Subquery(
+                    Rating.objects.filter(
+                        book=OuterRef("pk"),
+                        user=user,
+                    ).values("score"),
+                    output_field=IntegerField(),
+                )
+            )
+        else:
+            queryset = queryset.annotate(my_rating=Value(None, output_field=IntegerField()))
+
+        return queryset
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -118,7 +136,7 @@ class RatingViewSet(ModelViewSet):
     # @ Return only current user's rating for the selected book
     def get_queryset(self):
         book_pk = self.kwargs["book_pk"]
-        return Rating.objects.filter(user=self.request.user, book_id=book_pk)
+        return Rating.objects.select_related("user").filter(user=self.request.user, book_id=book_pk)
 
     # @ Create rating
     def perform_create(self, serializer):
