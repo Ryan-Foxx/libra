@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from .utils.paths import book_cover_upload_path, book_image_upload_path
@@ -112,3 +113,16 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.book}"
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ratings")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="ratings")
+    score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    datetime_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "book"], name="unique_books_rating_user_book")]
+
+    def __str__(self):
+        return f"{self.user} rated {self.book} -> {self.score}"

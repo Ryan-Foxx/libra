@@ -14,6 +14,7 @@ router.register("favorites", views.FavoriteViewSet, basename="favorite")
 book_router = routers.NestedDefaultRouter(router, "books", lookup="book")
 book_router.register("comments", views.CommentViewSet, basename="book-comments")
 book_router.register("images", views.BookImageViewSet, basename="book-images")
+book_router.register("ratings", views.RatingViewSet, basename="book-ratings")
 
 
 # @ ------------------- Include Routers To URL ↓ -------------------
