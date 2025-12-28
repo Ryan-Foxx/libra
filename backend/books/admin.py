@@ -10,6 +10,7 @@ from .models import (
     Favorite,
     Language,
     Publisher,
+    Rating,
     Translator,
 )
 
@@ -87,6 +88,12 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 @admin.register(Favorite)
-class CommentAdmin(admin.ModelAdmin):
+class FavoriteAdmin(admin.ModelAdmin):
     list_display = ["id", "user", "book", "datetime_created"]
+    list_per_page = 10
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "book", "score", "datetime_created"]
     list_per_page = 10
