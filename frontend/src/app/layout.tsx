@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/main.css";
+import ReduxProvider from "@/redux/ReduxProvider";
 
 export const metadata: Metadata = {
     title: "خرید و دانلود کتاب الکترونیکی و کتاب صوتی با لیبرا",
@@ -14,7 +15,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body>{children}</body>
+            <body>
+                <ReduxProvider>{children}</ReduxProvider>
+            </body>
         </html>
     );
 }
