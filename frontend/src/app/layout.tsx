@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import "@/styles/main.css";
 import ReduxProvider from "@/redux/ReduxProvider";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import "@/styles/main.css";
 
 export const metadata: Metadata = {
     title: "خرید و دانلود کتاب الکترونیکی و کتاب صوتی با لیبرا",
@@ -16,7 +17,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <ReduxProvider>{children}</ReduxProvider>
+                <ReduxProvider>
+                    <ReactQueryProvider>{children}</ReactQueryProvider>
+                </ReduxProvider>
             </body>
         </html>
     );
