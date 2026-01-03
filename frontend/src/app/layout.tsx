@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import ReduxProvider from "@/redux/ReduxProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
+
+import MainLayout from "@/components/layouts/main/MainLayout";
+
 import "@/styles/main.css";
 
 export const metadata: Metadata = {
@@ -18,7 +21,9 @@ export default function RootLayout({
         <html lang="fa" dir="rtl">
             <body>
                 <ReduxProvider>
-                    <ReactQueryProvider>{children}</ReactQueryProvider>
+                    <ReactQueryProvider>
+                        <MainLayout>{children}</MainLayout>
+                    </ReactQueryProvider>
                 </ReduxProvider>
             </body>
         </html>
